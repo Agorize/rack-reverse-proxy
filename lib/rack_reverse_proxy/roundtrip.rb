@@ -103,6 +103,12 @@ module RackReverseProxy
       target_request_headers["X-Forwarded-Proto"] = source_request.scheme
     end
 
+    def optional_headers
+      options[:optional_headers].each do |header,value|
+        target_request_headers[header.to_s] = value
+      end
+    end
+
     def initialize_http_header
       target_request.initialize_http_header(target_request_headers)
     end
@@ -188,6 +194,7 @@ module RackReverseProxy
       preserve_host
       strip_headers
       set_forwarded_headers
+      optional_headers
       initialize_http_header
       set_basic_auth
       setup_body
